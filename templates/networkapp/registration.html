@@ -1,0 +1,22 @@
+{% extends "networkapp/home.html"%}
+{% load staticfiles %}
+{% block body_block %}
+{% load crispy_forms_tags %}
+<div class="container">
+  <h4>User Registration</h4>
+  <hr />
+  {% if registered == True %}
+  <div class='alert alert-success'><strong>Success ! </strong> User Registered</div>
+  {% endif %}
+  <div class="row">
+    <div class="col-sm-9 col-md-7 col-lg-12 mx-auto">
+      <form enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        {{ user_form |crispy }}
+        {{ profile_form |crispy }}
+        <input type="submit" class="btn btn-success btn-md" value="Submit" />
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

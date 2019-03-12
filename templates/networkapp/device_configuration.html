@@ -1,0 +1,39 @@
+{% extends "networkapp/home.html"%}
+{% block body_block %}
+<div class="row">
+    <div class="col-sm-9 col-md-7 col-lg-12 mx-auto">
+                <h3 class="card-title text-center">Device configuration</h3>
+                <hr />
+                <p id="errormsg"></p>
+                {% if result == True %}
+                <div class='alert alert-success'><strong>Success ! </strong> Command saved</div>
+                {% endif %}
+                <form enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="commandlist">Command:</label>
+                        <textarea class="form-control" rows="8" style="height:auto" id="commandlist" onblur="splitcommand();"  name="commandlist"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="seldeviceip">Select Device:</label>
+                        <select class="form-control" id="seldeviceip" name="seldeviceip">
+                            {% for device in devicelist %}
+                            <option value='{{device.device_ip}}'> {{device.device_ip}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="hidden" name="commands" id="commands" />
+                    <input type="submit" class="btn btn-success btn-md" value="Submit" />
+                    <input type="reset" class="btn btn-danger btn-md" value="Reset" />
+                </form>
+    </div>
+</div>
+<script>
+function splitcommand(){
+    var textArea = document.getElementById("commandlist");
+    var arrayOfLines = textArea.value.split("\n"); 
+    var finalcommandlist = arrayOfLines.join();
+    document.getElementById("commands").value=finalcommandlist;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "networkapp/home.html"%}
+{% block body_block %}
+{% load crispy_forms_tags %}
+<div class="row">
+    <div class="col-sm-9 col-md-7 col-lg-12 mx-auto">
+        <h3 class="card-title text-center">Add Commands</h3>
+        <hr />
+        <p id="errormsg"></p>
+        {% if result == True %}
+        <div class='alert alert-success'><strong>Success ! </strong> Command saved</div>
+        {% endif %}
+        <form enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            {{ device_command_form | crispy }}
+            <input type="submit" class="btn btn-success btn-md" value="Submit" />
+            <input type="reset" class="btn btn-danger btn-md" value="Reset" />
+        </form>
+    </div>
+</div>
+{% endblock %}
