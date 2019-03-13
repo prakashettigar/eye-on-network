@@ -4,7 +4,7 @@ pipeline:
         repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp.
         registry: index.docker.io
         secrets: [ docker_username, docker_password ]
-        dockerfile: docker/Dockerfile
+        dockerfile: Dockerfile
         tags:
             - latest
             - networkapp-0.1-SNAPSHOT-${DRONE_BUILD_NUMBER}  
