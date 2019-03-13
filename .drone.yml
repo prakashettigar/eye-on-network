@@ -1,11 +1,11 @@
 pipeline:
     "[DOCKER] build networkapp": #Docker build for networkapp
         image: plugins/docker
-        repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
-        dockerfilePath: ./Dockerfile
-        buildContext: .
+        repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp.
         registry: index.docker.io
         secrets: [ docker_username, docker_password ]
+        dockerfile: ./docker/Dockerfile
+        context: ./docker/
         tags:
             - latest
             - networkapp-0.1-SNAPSHOT-${DRONE_BUILD_NUMBER}  
