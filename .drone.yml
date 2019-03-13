@@ -5,7 +5,6 @@ pipeline:
         registry: index.docker.io
         secrets: [ docker_username, docker_password ]
         dockerfile: Dockerfile
-        dockerfile: ./docker/Dockerfile
         context: ./
         tags:
             - latest
