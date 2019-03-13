@@ -1,12 +1,13 @@
-kind: pipeline
-
-steps:
-- name: build
-  image: golang
-  commands:
-  - go build
-  - go test
-
-trigger:
-  branch:
-  - master
+pipeline:
+    "[DOCKER] build networkapp": #Docker build for networkapp
+        image: plugins/docker
+        repo: cloud.docker.com/repository/docker/prakashshettigar23/devopsautomation
+        registry: cloud.docker.com
+        secrets: [ docker_username, docker_password ]
+        tags:
+            - latest
+            - networkapp-0.1-SNAPSHOT-${DRONE_BUILD_NUMBER}  
+        dockerfile: ./ms/syncms/docker/Dockerfile
+        context: ./ms/syncms
+        when:
+            event: [push]
