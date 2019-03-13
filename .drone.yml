@@ -2,7 +2,7 @@ pipeline:
     "[DOCKER] build networkapp": #Docker build for networkapp
         image: plugins/docker
         repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
-        registry: cloud.docker.com
+        registry: docker.io
         secrets: [ docker_username, docker_password ]
         tags:
             - latest
