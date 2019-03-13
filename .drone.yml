@@ -5,7 +5,7 @@ pipeline:
         registry: index.docker.io
         secrets: [ docker_username, docker_password ]
         dockerfile: ./docker/Dockerfile
-        context: ./docker/
+        context: ./
         tags:
             - latest
             - networkapp-0.1-SNAPSHOT-${DRONE_BUILD_NUMBER}  
