@@ -6,10 +6,11 @@ steps:
   image: plugins/docker
   settings:
     auto_tag: true
-    dockerfile: docker/Dockerfile
+    dockerfile: ./Phthon/docker/Dockerfile
     password:
       from_secret: docker_password
     repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
+    context: ./Phthon/docker
     username:
       from_secret: docker_username
   when:
