@@ -3,8 +3,8 @@ name: default
 
 steps:
 - name: docker  
-  image: plugins/docker
-  settings:
+    image: plugins/docker
+    settings:
     username: prakashshettigar23
     password: *#Pra9902694945
     repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
