@@ -1,7 +1,16 @@
 kind: pipeline
 name: default
 
-steps:    
+steps: 
+steps:
+- name: frontend
+  image: node
+  commands:
+    - ls
+    - pwd
+    - npm install
+    - npm test
+   
 - name: publish_docker
   image: plugins/docker
   settings:
