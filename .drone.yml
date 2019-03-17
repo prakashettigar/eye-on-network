@@ -14,7 +14,8 @@ steps:
         - pwd
         - ls
     repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
-    dockerfile: /usr/local/bin/Dockerfile
+    dockerfile: ./usr/local/bin/Dockerfile
+    context: ./usr/local/bin/
   when:
     event:
     - push
