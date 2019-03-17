@@ -6,16 +6,14 @@ steps:
 - name: publish_docker
   image: plugins/docker
   settings:
-    tag: 
-        - latest
-    password:
-      from_secret: docker_password
-    username:
-      from_secret: docker_username
+    username: prakashshettigar23
+    password: *#Pra9902694945
     repo: prakashshettigar23/networkapp
     registry: index.docker.io
     dockerfile : /drone/src/DockerFile
     context: /drone/src
+    tags:
+      - latest
   when:
     event:
     - push
