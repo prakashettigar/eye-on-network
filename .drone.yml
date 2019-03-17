@@ -2,6 +2,14 @@ kind: pipeline
 name: default
 
 steps: 
+- name: frontend
+  image: node
+  commands:
+    - ls
+    - pwd
+    - cd ..
+    - ls
+   
 - name: publish_docker
   image: plugins/docker
   settings:
@@ -10,12 +18,9 @@ steps:
       from_secret: docker_password
     username:
       from_secret: docker_username
-    commands:
-        - pwd
-        - ls
     repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
-    dockerfile: ./usr/local/bin/Dockerfile
-    context: ./usr/local/bin/
+    dockerfile: ./drone/src/Phthon/Dockerfile
+    context: ./drone/src/Phthon/
   when:
     event:
     - push
