@@ -11,8 +11,8 @@ steps:
     username:
       from_secret: docker_username
     repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
-    dockerfile: ../Phthon/docker/Dockerfile
-    context: ../Phthon/docker/
+    dockerfile: ./Phthon/Dockerfile
+    context: ./Phthon/
   when:
     event:
     - push
