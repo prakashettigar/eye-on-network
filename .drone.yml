@@ -9,6 +9,8 @@ steps:
     - pwd
     - cd ..
     - ls
+    - cd /drone/src/
+    - ls
    
 - name: publish_docker
   image: plugins/docker
