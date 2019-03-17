@@ -8,10 +8,6 @@ steps:
   settings:
     tag: 
         - latest
-    password:
-      from_secret: docker_password
-    username:
-      from_secret: docker_username
     repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
     registry: index.docker.io
     dockerfile : /drone/src/DockerFile
