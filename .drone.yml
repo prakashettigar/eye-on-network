@@ -6,8 +6,10 @@ steps:
 - name: publish_docker
   image: plugins/docker
   settings:
-    username: prakashshettigar23
-    password: *#Pra9902694945
+    password:
+      from_secret: docker_password
+    username:
+      from_secret: docker_username
     repo: prakashshettigar23/networkapp
     registry: index.docker.io
     dockerfile : /drone/src/DockerFile
