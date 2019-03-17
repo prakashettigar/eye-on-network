@@ -8,13 +8,14 @@ steps:
   settings:
     tag: 
         - latest
-    repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
+    password:
+      from_secret: docker_password
+    username:
+      from_secret: docker_username
+    repo: prakashshettigar23/networkapp
     registry: index.docker.io
     dockerfile : /drone/src/DockerFile
     context: /drone/src
-    commands:
-        - ls
-        - pwd
   when:
     event:
     - push
