@@ -21,7 +21,7 @@ steps:
     username:
       from_secret: docker_username
     repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
-    context: /Python
+    context: /var/lib/docker/Python
     commands:
         - ls
         - pwd
