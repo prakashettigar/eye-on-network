@@ -21,8 +21,8 @@ steps:
     username:
       from_secret: docker_username
     repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
-    dockerfile: ./drone/src/Phthon/Dockerfile
-    context: ./drone/src/Phthon/
+    dockerfile: /drone/src/Phthon/Dockerfile
+    context: /drone/src/Phthon/
   when:
     event:
     - push
