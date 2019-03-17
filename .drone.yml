@@ -2,15 +2,6 @@ kind: pipeline
 name: default
 
 steps: 
-- name: frontend
-  image: node
-  commands:
-    - ls
-    - pwd
-    - cd ..
-    - ls
-    - cd /drone/src/
-    - ls
    
 - name: publish_docker
   image: plugins/docker
