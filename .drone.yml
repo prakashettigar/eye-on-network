@@ -15,13 +15,14 @@ steps:
 - name: publish_docker
   image: plugins/docker
   settings:
-    auto_tag: true
+    tag: 
+        - latest
     password:
       from_secret: docker_password
     username:
       from_secret: docker_username
     repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
-    context: /usr/local/bin/docker/
+    context: /usr/local/bin/docker/Python/
     commands:
         - ls
         - pwd
