@@ -8,9 +8,11 @@ steps:
     auto_tag: true
     password:
       from_secret: docker_password
-    repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
     username:
       from_secret: docker_username
+    repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
+    dockerfile: ../Phthon/docker/Dockerfile
+    context: ../Phthon/docker/
   when:
     event:
     - push
