@@ -12,8 +12,9 @@ steps:
       from_secret: docker_username
     commands:
         - pwd
+        - ls
     repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
-    dockerfile: /drone/src/Dockerfile
+    dockerfile: /usr/local/bin/Dockerfile
   when:
     event:
     - push
