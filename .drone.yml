@@ -2,15 +2,6 @@ kind: pipeline
 name: default
 
 steps: 
-steps:
-- name: frontend
-  image: node
-  commands:
-    - ls
-    - pwd
-    - npm install
-    - npm test
-   
 - name: publish_docker
   image: plugins/docker
   settings:
@@ -20,8 +11,8 @@ steps:
     username:
       from_secret: docker_username
     repo: cloud.docker.com/repository/docker/prakashshettigar23/networkapp
-    dockerfile: ./Phthon/Dockerfile
-    context: ./Phthon/
+    dockerfile: ./Dockerfile
+    context: ./drone/src/
   when:
     event:
     - push
