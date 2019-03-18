@@ -2,7 +2,6 @@ kind: pipeline
 name: default
 
 steps: 
-   
 - name: publish_docker
   image: plugins/docker
   settings:
@@ -11,9 +10,6 @@ steps:
     username:
       from_secret: docker_username
     repo: prakashshettigar23/networkapp
-    registry: index.docker.io
-    dockerfile : /drone/src/DockerFile
-    context: /drone/src
     tags:
       - latest
   when:
