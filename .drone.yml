@@ -20,10 +20,10 @@ steps:
     - push
     - tag
     
-- name:code-analysis
+- name: code-analysis
   image: aosapps/drone-sonar-plugin
   settings:
-    secrets: [sonar_host, sonar_token] 
+    from_secret: [sonar_host, sonar_token] 
   when:
     event:
     - push
