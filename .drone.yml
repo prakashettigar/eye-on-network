@@ -21,7 +21,8 @@ steps:
     - tag
     
 - name:code-analysis
-    image: aosapps/drone-sonar-plugin
+  image: aosapps/drone-sonar-plugin
+  settings:
     secrets: [sonar_host, sonar_token] 
   when:
     event:
