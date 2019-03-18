@@ -10,6 +10,8 @@ steps:
     username:
       from_secret: docker_username
     repo: prakashshettigar23/networkapp
+    dockerfile : /drone/src/DockerFile
+    context: /drone/src
     tags:
       - latest
   when:
