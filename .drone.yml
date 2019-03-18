@@ -24,6 +24,7 @@ steps:
   image: aosapps/drone-sonar-plugin
   settings:
     from_secret: [sonar_host, sonar_token] 
+  host: https://sonarcloud.io
   when:
     event:
     - push
