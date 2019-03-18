@@ -15,15 +15,13 @@ steps:
     tags:
       - latest
       - manhunt-0.1-SNAPSHOT-${DRONE_BUILD_NUMBER}
-  when:
-    event:
-    - push
-    - tag
+  #when:
+  #  event:
+  #  - push
+  #  - tag
     
 - name: code-analysis
   image: aosapps/drone-sonar-plugin
-  settings:
-    from_secret: [sonar_host, sonar_token] 
   host: https://sonarcloud.io
   when:
     event:
