@@ -19,3 +19,8 @@ steps:
     event:
     - push
     - tag
+    
+code-analysis:
+    image: aosapps/drone-sonar-plugin
+    secrets: [sonar_host, sonar_token]   
+ #sonar-scanner.bat -D"sonar.projectKey=prakashettigar_Python" -D"sonar.organization=prakashettigar-github" -D"sonar.sources=." -D"sonar.host.url=https://sonarcloud.io" -D"sonar.login=54692686540985b96b0f6120e391752b217d32f4"
