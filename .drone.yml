@@ -28,8 +28,7 @@ steps:
 pipeline:
   analyze-code-using-sonarqube:
     image: rucciva/drone-sonar-plugin
-    secrets: [sonar_host, sonar_token]
-    add_branch_prefix: true  
+    secrets: [sonar_host, sonar_token] 
     when:
         event:
             - push
