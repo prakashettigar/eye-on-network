@@ -52,7 +52,13 @@
                     <li>
                         <a class="nav-link" href="{% url 'networkapp:add_device_credential' %}">
                             <i class="nc-icon nc-paper-2"></i>
-                            <p>Add Device Credential</p>
+                            <p>Device Management</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{% url 'networkapp:add_device_commands' %}">
+                            <i class="nc-icon nc-vector"></i>
+                            <p>Command Management</p>
                         </a>
                     </li>
                     <li>
@@ -62,15 +68,15 @@
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{% url 'networkapp:add_device_commands' %}">
-                            <i class="nc-icon nc-vector"></i>
-                            <p>DEFINE COMMANDS</p>
+                        <a class="nav-link" href="{% url 'networkapp:device_access' %}">
+                            <i class="nc-icon nc-planet"></i>
+                            <p>Device Access Verify</p>
                         </a>
                     </li>
                     <li>
                         <a class="nav-link" href="{% url 'networkapp:fetch_device_configuration' %}">
                             <i class="nc-icon nc-explore-2"></i>
-                            <p>Get Device Details</p>
+                            <p>Collect Data</p>
                         </a>
                     </li>
                     <li>
@@ -303,7 +309,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $.ajax({
-            url: "/getDashboardDetails",
+            url: "networkapp/getDashboardDetails/",
             type: "GET",
             success: function (data) {
                 alert(data.result);

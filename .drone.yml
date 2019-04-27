@@ -14,15 +14,7 @@ steps:
     context: /drone/src
     tags:
       - latest
-      - manhunt-0.1-SNAPSHOT-${DRONE_BUILD_NUMBER}
-  #when:
-  #  event:
-  #  - push
-  #  - tag
-    
-#- name: code-analysis
-#  image: aosapps/drone-sonar-plugin
-#  host: https://sonarcloud.io
+      - cnm-0.1-SNAPSHOT-${DRONE_BUILD_NUMBER}
 
 - name: code-analysis
   image: aosapps/drone-sonar-plugin
@@ -31,6 +23,3 @@ steps:
         from_secret: sonar_host
       sonar_token:
         from_secret: sonar_token
-    
-# https://sonarcloud.io/project/issues?id=prakashettigar_Python&resolved=false   
- #sonar-scanner.bat -D"sonar.projectKey=prakashettigar_Python" -D"sonar.organization=prakashettigar-github" -D"sonar.sources=." -D"sonar.host.url=https://sonarcloud.io" -D"sonar.login=54692686540985b96b0f6120e391752b217d32f4"
