@@ -4,9 +4,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from networkapp.models import DeviceCommandInfo, DeviceCredentialDetail
+from networkapp.models import DeviceCommandInfo, DeviceCredentialDetail,CollectionInfo
 import numpy as np
 import json
+import datetime
+import os
 
 import networkapp.ssh_connection as sshcon
 from networkapp.device_discovery import DEVICEDISCOVERY
@@ -32,18 +34,20 @@ def getDashboardDetails(request):
     inactivecount=0
     activecount=0
     devicelist=[]
-    print("requet from ajax")
-    if request.method == '': 
-        #get_value= request.body
+    devicelistArray=[]
+    if request.method == 'GET': 
         d = DEVICEDISCOVERY()
         devicelist = DeviceCredentialDetail.objects.values('device_ip')
-        d.ping_range(devicelist)
-        for value in d.ping_res.items():
-            if value == "inactive":
+        for deviceip in devicelist:
+            devicelistArray.append(deviceip.get('device_ip'))
+        print("requet from ajax : ",devicelistArray)
+        d.ping_range(devicelistArray)
+        for ip,value in d.ping_res.items():
+            print(value)
+            if value == "active":
+                activecount=activecount+1
+            else:
                 inactivecount=inactivecount+1
-    print(inactivecount)
-    activecount=len(devicelist)
-
     data = {'inactivecount':inactivecount,'activecount':activecount}
     print(data)
     return HttpResponse(json.dumps(data), content_type="application/json")
@@ -116,7 +120,13 @@ def device_discovery(request):
     if request.method == 'POST':
         fromip = request.POST.get('fromip')
         toip = request.POST.get('toip')
-        list = D.ips(fromip, toip)
+        if fromip == toip:
+            list.append(fromip)
+        else:
+            list = D.ips(fromip, toip)
+            list.append(toip)
+
+        print("List of ip : ",list)
         D.ping_range(list)
          #print(D.ping_res)
     return render(request, 'networkapp/device_discovery.html', {'new_dict': D.ping_res, 'activedevice_count': D.activedevice_count, 'inactivedevice_count': D.inactivedevice_count})
@@ -190,6 +200,23 @@ def fetch_device_configuration(request):
             rechable_ip_list=np.delete(rechable_ip_list, dav_index_list).tolist()        
             
             create_threads(rechable_ip_list,username_list,password_list,command,ssh_connection)
+
+        ts = datetime.datetime.now().timestamp()
+
+        try:  
+            os.mkdir("data/"+command)
+        except OSError:  
+            print ("Creation of the directory %s failed")
+
+        for ip,output in sshcon.device_output.items():
+            filepath="data/"+command+"/"+ip+"-"+str(ts)+".txt"
+            with open(filepath, 'w+') as f:
+                f.write(output+'')
+                f.flush()
+                f.close()
+            collection=CollectionInfo(filepath=filepath,created_on=datetime.datetime.now().time())
+            collection.save()
+            
          #print("invalid cred list :",invalid_cred_device_list)
          #print("unrechable cred list :",unrechable_device_list)
 
@@ -319,7 +346,6 @@ def device_access(request):
     devicelist = DeviceCredentialDetail.objects.values('device_ip')
 
     if request.method == "POST":
-        command = request.POST.get('selcommand')
         deviceip = request.POST.get('seldeviceip')
          
         if deviceip == "all" :
@@ -360,11 +386,16 @@ def device_access(request):
             dav.verifydav(rechable_ip_list,username_list,password_list)
 
         for device, value in dav.dav_res.items():
+            print(device,value)
             if value == "failed":
                 invalid_cred_device_list.append(device)
+            else:
+                valid_cred_device_list.append(device)
             
 
-         #print("invalid cred list :",invalid_cred_device_list)
-         #print("unrechable cred list :",unrechable_device_list)
+        for dev in invalid_cred_device_list:
+            print("invalid cred list :",dev)
+        #print("unrechable cred list :",unrechable_device_list)
+        #Testing Demo
 
     return render(request, 'networkapp/dav.html', {'devicelist': devicelist,'invalidcredential':invalid_cred_device_list,'unreachabledevice':unrechable_device_list,'validcredlist':valid_cred_device_list})
