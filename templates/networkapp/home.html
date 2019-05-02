@@ -88,7 +88,7 @@
                     <li class="nav-item active active-pro">
                         <a class="nav-link active">
                             <i class="nc-icon nc-circle"></i>
-                            <p>© 2019 Man Hunt</p>
+                            <p>© 2019 CNM</p>
                         </a>
                     </li>
                 </ul>
@@ -312,7 +312,13 @@
             url: "networkapp/getDashboardDetails/",
             type: "GET",
             success: function (data) {
-                alert(data.result);
+                var total = data.inactivecount +data.activecount;
+                var acvtive_perc=Math.round((data.activecount/total)*100);
+                var inacvtive_perc=Math.round((data.inactivecount/total)*100);
+                Chartist.Pie('#chartPreferences', {
+                labels: [acvtive_perc+'%', inacvtive_perc+'%'],
+                series: [acvtive_perc, inacvtive_perc]
+                });
             }
         });
     });

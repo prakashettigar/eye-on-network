@@ -8,6 +8,9 @@ class UserForm(forms.ModelForm):
     class Meta():
         model = User
         fields = ('username','email','password')
+        labels = {
+        "username": "User Id"
+        }
 
 class UserProfileInfoForm(forms.ModelForm):
     full_name = forms.CharField(required=True)
@@ -27,3 +30,7 @@ class DeviceCommandForm(forms.ModelForm):
     class Meta():
         model = DeviceCommandInfo
         fields = ('device_command','command_name')
+        labels = {
+            "device_command": "Enter command",
+             "command_name": "Enter short name for command",
+        }

@@ -38,15 +38,15 @@ def ssh_connection(ip,username,password,command):
         #Writing each line in the file to the device
         #for each_line in selected_cmd_file.readlines():
                #Writing each line in the file to the device
-        for each_line in selected_cmd_file.readlines():
-            connection.send(each_line + '\n')
-            time.sleep(2)
+        #for each_line in selected_cmd_file.readlines():
+        #    connection.send(each_line + '\n')
+        #    time.sleep(2)
 
         #Closing the user file
-        selected_user_file.close()
+        #selected_user_file.close()
         
         #Closing the command file
-        selected_cmd_file.close()
+        #selected_cmd_file.close()
         
         #Checking command output for IOS syntax errors
         router_output = connection.recv(65535)
