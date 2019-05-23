@@ -18,6 +18,13 @@
     <link href="{% static 'css/light-bootstrap-dashboard.css' %}" rel="stylesheet" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link href="{% static 'css/demo.css' %}" rel="stylesheet" />
+    <style>
+    .nav-link i {
+        font-size: 22px !important;
+        margin-right: 10px  !important;
+        width: 18px !important; 
+    }
+    </style>
 </head>
 
 <body>
@@ -32,20 +39,20 @@
     -->
             <div class="sidebar-wrapper">
                 <div class="logo">
-                    <a href="{% url 'networkapp:dashboard' %}" class="simple-text">
+                    <a href="{% url 'networkapp:dashboard' %}" id="cnmhomepage" class="simple-text">
                         CENTRALIZED NETWORK MANAGER
                     </a>
                 </div>
                 <ul class="nav">
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'networkapp:dashboard' %}" id="dashboardlink">
                             <i class="nc-icon nc-chart-pie-35"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{% url 'networkapp:register' %}">
-                            <i class="nc-icon nc-circle-09"></i>
+                        <a class="nav-link" href="{% url 'networkapp:register' %}" id="user_register">
+                            <i class="nc-icon nc-circle-09 "></i>
                             <p>User Registration</p>
                         </a>
                     </li>
@@ -85,7 +92,7 @@
                             <p>Device Configuration</p>
                         </a>
                     </li>
-                    <li class="nav-item active active-pro">
+                    <li class="nav-item">
                         <a class="nav-link active">
                             <i class="nc-icon nc-circle"></i>
                             <p>© 2019 CNM</p>
