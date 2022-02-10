@@ -4,9 +4,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from networkapp.models import DeviceCommandInfo, DeviceCredentialDetail
+from networkapp.models import DeviceCommandInfo, DeviceCredentialDetail,CollectionInfo
 import numpy as np
 import json
+import datetime
+import os
 
 import networkapp.ssh_connection as sshcon
 from networkapp.device_discovery import DEVICEDISCOVERY
@@ -19,7 +21,7 @@ from networkapp.device_access_varification import DEVICE_ACCESS_VERIFICATION
 def index(request):
     urllink=''
     if request.user.is_authenticated:
-        urllink='networkapp/.html'
+        urllink='networkapp/home.html'
     else:
         urllink='networkapp/index.html'
     return render(request,urllink)
@@ -31,29 +33,28 @@ def dashboard(request):
 def getDashboardDetails(request):
     inactivecount=0
     activecount=0
-    print("requet from ajax")
-    if request.GET(): 
-        #get_value= request.body
+    devicelist=[]
+    devicelistArray=[]
+    if request.method == 'GET': 
         d = DEVICEDISCOVERY()
         devicelist = DeviceCredentialDetail.objects.values('device_ip')
-        d.ping_range(devicelist)
-        for value in d.ping_res.items():
-            if value == "inactive":
+        for deviceip in devicelist:
+            devicelistArray.append(deviceip.get('device_ip'))
+        print("requet from ajax : ",devicelistArray)
+        d.ping_range(devicelistArray)
+        for ip,value in d.ping_res.items():
+            print(value)
+            if value == "active":
+                activecount=activecount+1
+            else:
                 inactivecount=inactivecount+1
-    print(inactivecount)
-    activecount=devicelist.len
-
     data = {'inactivecount':inactivecount,'activecount':activecount}
+    print(data)
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 @login_required(login_url='/accounts/login/')
 def home(request):
     return render(request, 'networkapp/home.html')
-
-
-@login_required(login_url='/accounts/login/')
-def special(request):
-    return HttpResponse("You are logged in")
 
 
 @login_required(login_url='/accounts/login/')
@@ -81,8 +82,8 @@ def register(request):
 
             profile.save()
             registered = True
-        else:
-            print(user_form.errors, profile_form.errors)
+        #else:
+            #print(user_form.errors, profile_form.errors)
     else:
         user_form = UserForm()
         profile_form = UserProfileInfoForm()
@@ -104,8 +105,8 @@ def user_login(request):
             else:
                 return HttpResponse("ACCOUNT NOT ACTIVE")
         else:
-            print("Someone tried to login and failes !")
-            print("Username: {} and password {}".format(username, password))
+             #print("Someone tried to login and failes !")
+             #print("Username: {} and password {}".format(username, password))
             return HttpResponse("Invalid Login Details")
     else:
         return render(request, 'networkapp/index.html', {})
@@ -119,9 +120,15 @@ def device_discovery(request):
     if request.method == 'POST':
         fromip = request.POST.get('fromip')
         toip = request.POST.get('toip')
-        list = D.ips(fromip, toip)
+        if fromip == toip:
+            list.append(fromip)
+        else:
+            list = D.ips(fromip, toip)
+            list.append(toip)
+
+        print("List of ip : ",list)
         D.ping_range(list)
-        print(D.ping_res)
+         #print(D.ping_res)
     return render(request, 'networkapp/device_discovery.html', {'new_dict': D.ping_res, 'activedevice_count': D.activedevice_count, 'inactivedevice_count': D.inactivedevice_count})
 
 
@@ -146,10 +153,10 @@ def fetch_device_configuration(request):
          
         if deviceip == "all" :
             device_cred_query = DeviceCredentialDetail.objects.all()
-            print(device_cred_query)
+             #print(device_cred_query)
             for device_cred in device_cred_query:
                 username = device_cred.device_username
-                print(username)
+                 #print(username)
                 username_list.append(username)
                 password = device_cred.device_password
                 password_list.append(password)
@@ -193,9 +200,25 @@ def fetch_device_configuration(request):
             rechable_ip_list=np.delete(rechable_ip_list, dav_index_list).tolist()        
             
             create_threads(rechable_ip_list,username_list,password_list,command,ssh_connection)
-            print("device out : ?????????? " ,sshcon.device_output)
-        print("invalid cred list :",invalid_cred_device_list)
-        print("unrechable cred list :",unrechable_device_list)
+
+        ts = datetime.datetime.now().timestamp()
+
+        try:  
+            os.mkdir("data/"+command)
+        except OSError:  
+            print ("Creation of the directory %s failed")
+
+        for ip,output in sshcon.device_output.items():
+            filepath="data/"+command+"/"+ip+"-"+str(ts)+".txt"
+            with open(filepath, 'w+') as f:
+                f.write(output+'')
+                f.flush()
+                f.close()
+            collection=CollectionInfo(filepath=filepath,created_on=datetime.datetime.now().time())
+            collection.save()
+            
+         #print("invalid cred list :",invalid_cred_device_list)
+         #print("unrechable cred list :",unrechable_device_list)
 
     return render(request, 'networkapp/fetch_device_configuration.html', {'commandlist': commandlist, 'devicelist': devicelist,'commandoutput' : sshcon.device_output,'invalidcredential':invalid_cred_device_list,'unreachabledevice':unrechable_device_list})
 
@@ -210,7 +233,7 @@ def add_device_credential(request):
             device_details.save()
             result = True
         else:
-            print(device_credential_form.errors)
+             #print(device_credential_form.errors)
             result = False
     else:
         device_credential_form = DeviceCredentialForm()
@@ -226,7 +249,7 @@ def add_device_commands(request):
             device_command.save()
             result = True
         else:
-            print(device_command_form.errors)
+             #print(device_command_form.errors)
             result = False
     else:
         device_command_form = DeviceCommandForm()
@@ -252,10 +275,10 @@ def device_configuration(request):
 
         if deviceip == "all" :
             device_cred_query = DeviceCredentialDetail.objects.all()
-            print(device_cred_query)
+             #print(device_cred_query)
             for device_cred in device_cred_query:
                 username = device_cred.device_username
-                print(username)
+                 #print(username)
                 username_list.append(username)
                 password = device_cred.device_password
                 password_list.append(password)
@@ -298,12 +321,81 @@ def device_configuration(request):
             password_list=np.delete(password_list, dav_index_list).tolist()
             rechable_ip_list=np.delete(rechable_ip_list, dav_index_list).tolist()        
             
-            print("commandlist "+ commandlist)
+             #print("commandlist "+ commandlist)
 
             create_threads(rechable_ip_list,username_list,password_list,commandlist,ssh_connection)
-            print("device out : ?????????? " ,sshcon.device_output)
-        print("invalid cred list :",invalid_cred_device_list)
-        print("unrechable cred list :",unrechable_device_list)
+             #print("device out : ?????????? " ,sshcon.device_output)
+         #print("invalid cred list :",invalid_cred_device_list)
+         #print("unrechable cred list :",unrechable_device_list)
 
     return render(request, 'networkapp/device_configuration.html', {'devicelist':devicelist,'commandoutput' : sshcon.device_output,'invalidcredential':invalid_cred_device_list,'unreachabledevice':unrechable_device_list})
 
+@login_required(login_url='/accounts/login/')
+def device_access(request):
+    sshcon.device_output.clear()
+    ip_list = []
+    password_list=[]
+    username_list=[]
+    unrechable_device_list=[]
+    rechable_ip_list=[]
+    invalid_cred_device_list=[]
+    valid_cred_device_list=[]
+    d = DEVICEDISCOVERY()
+    dav = DEVICE_ACCESS_VERIFICATION()  
+
+    devicelist = DeviceCredentialDetail.objects.values('device_ip')
+
+    if request.method == "POST":
+        deviceip = request.POST.get('seldeviceip')
+         
+        if deviceip == "all" :
+            device_cred_query = DeviceCredentialDetail.objects.all()
+             #print(device_cred_query)
+            for device_cred in device_cred_query:
+                username = device_cred.device_username
+                 #print(username)
+                username_list.append(username)
+                password = device_cred.device_password
+                password_list.append(password)
+                deviceip = device_cred.device_ip
+                ip_list.append(deviceip)
+        else:
+            ip_list.append(deviceip)
+            usernames = DeviceCredentialDetail.objects.values('device_username').filter(device_ip=deviceip)
+            passwords = DeviceCredentialDetail.objects.values('device_password').filter(device_ip=deviceip)
+            for user in usernames:
+                username = user.get('device_username')
+                username_list.append(username)
+            for user in passwords:
+                password = user.get('device_password')
+                password_list.append(password)
+        
+        rechable_ip_list = list(ip_list)
+        d.ping_range(ip_list)
+        index_list=[]
+        for device, value in d.ping_res.items():
+            if value == "inactive":
+                unrechable_device_list.append(device)
+                index_list.append(ip_list.index(device))
+
+        username_list=np.delete(username_list, index_list).tolist()
+        password_list=np.delete(password_list, index_list).tolist()
+        rechable_ip_list=np.delete(rechable_ip_list, index_list).tolist()
+
+        if len(rechable_ip_list) > 0 :
+            dav.verifydav(rechable_ip_list,username_list,password_list)
+
+        for device, value in dav.dav_res.items():
+            print(device,value)
+            if value == "failed":
+                invalid_cred_device_list.append(device)
+            else:
+                valid_cred_device_list.append(device)
+            
+
+        for dev in invalid_cred_device_list:
+            print("invalid cred list :",dev)
+        #print("unrechable cred list :",unrechable_device_list)
+        #Testing Demo
+
+    return render(request, 'networkapp/dav.html', {'devicelist': devicelist,'invalidcredential':invalid_cred_device_list,'unreachabledevice':unrechable_device_list,'validcredlist':valid_cred_device_list})

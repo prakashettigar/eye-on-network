@@ -18,3 +18,7 @@ class DeviceCommandInfo(models.Model):
     device_command =models.CharField(max_length=100,unique=True)
     command_name = models.CharField(max_length=30,unique=True)
 
+class CollectionInfo(models.Model):
+    auto_increment_id = models.AutoField(primary_key=True)
+    filepath = models.CharField(max_length=100,unique=True)
+    created_on = models.DateTimeField(auto_now=True)

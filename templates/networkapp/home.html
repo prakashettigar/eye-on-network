@@ -7,7 +7,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{% static 'img/apple-icon.png' %}">
     <link rel="icon" type="image/png" href="{% static 'img/favicon.ico' %}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>MAN HUNT</title>
+    <title>CNM</title>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
         name='viewport' />
     <!--     Fonts and icons     -->
@@ -18,6 +18,13 @@
     <link href="{% static 'css/light-bootstrap-dashboard.css' %}" rel="stylesheet" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link href="{% static 'css/demo.css' %}" rel="stylesheet" />
+    <style>
+    .nav-link i {
+        font-size: 22px !important;
+        margin-right: 10px  !important;
+        width: 18px !important; 
+    }
+    </style>
 </head>
 
 <body>
@@ -27,30 +34,38 @@
         Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
 
         Tip 2: you can also add an image using data-image tag
+		
+		Devops test
     -->
             <div class="sidebar-wrapper">
                 <div class="logo">
-                    <a href="{% url 'networkapp:dashboard' %}" class="simple-text">
-                        MAN HUNT
+                    <a href="{% url 'networkapp:dashboard' %}" id="cnmhomepage" class="simple-text">
+                        CENTRALIZED NETWORK MANAGER
                     </a>
                 </div>
                 <ul class="nav">
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'networkapp:dashboard' %}" id="dashboardlink">
                             <i class="nc-icon nc-chart-pie-35"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{% url 'networkapp:register' %}">
-                            <i class="nc-icon nc-circle-09"></i>
+                        <a class="nav-link" href="{% url 'networkapp:register' %}" id="user_register">
+                            <i class="nc-icon nc-circle-09 "></i>
                             <p>User Registration</p>
                         </a>
                     </li>
                     <li>
                         <a class="nav-link" href="{% url 'networkapp:add_device_credential' %}">
                             <i class="nc-icon nc-paper-2"></i>
-                            <p>Add Device Credential</p>
+                            <p>Device Management</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{% url 'networkapp:add_device_commands' %}">
+                            <i class="nc-icon nc-vector"></i>
+                            <p>Command Management</p>
                         </a>
                     </li>
                     <li>
@@ -60,15 +75,15 @@
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{% url 'networkapp:add_device_commands' %}">
-                            <i class="nc-icon nc-vector"></i>
-                            <p>DEFINE COMMANDS</p>
+                        <a class="nav-link" href="{% url 'networkapp:device_access' %}">
+                            <i class="nc-icon nc-planet"></i>
+                            <p>Device Access Verify</p>
                         </a>
                     </li>
                     <li>
                         <a class="nav-link" href="{% url 'networkapp:fetch_device_configuration' %}">
                             <i class="nc-icon nc-explore-2"></i>
-                            <p>Get Device Details</p>
+                            <p>Collect Data</p>
                         </a>
                     </li>
                     <li>
@@ -77,10 +92,10 @@
                             <p>Device Configuration</p>
                         </a>
                     </li>
-                    <li class="nav-item active active-pro">
+                    <li class="nav-item">
                         <a class="nav-link active">
                             <i class="nc-icon nc-circle"></i>
-                            <p>© 2019 Man Hunt</p>
+                            <p>© 2019 CNM</p>
                         </a>
                     </li>
                 </ul>
@@ -301,10 +316,16 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $.ajax({
-            url: "/getDashboardDetails",
+            url: "networkapp/getDashboardDetails/",
             type: "GET",
             success: function (data) {
-                alert(data.result);
+                var total = data.inactivecount +data.activecount;
+                var acvtive_perc=Math.round((data.activecount/total)*100);
+                var inacvtive_perc=Math.round((data.inactivecount/total)*100);
+                Chartist.Pie('#chartPreferences', {
+                labels: [acvtive_perc+'%', inacvtive_perc+'%'],
+                series: [acvtive_perc, inacvtive_perc]
+                });
             }
         });
     });
